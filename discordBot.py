@@ -1,6 +1,7 @@
 import os
 import requests
 import random
+import re
 
 from dotenv import load_dotenv
 from discord.ext import commands
@@ -31,9 +32,9 @@ pyBotSon = commands.Bot(command_prefix="!")
 @pyBotSon.event         
 async def on_ready():
         print(f'{pyBotSon.user.display_name} has connected to Discord!')
-    
+
 async def on_message(message):
-    print(message.content)
+    #print(message.content)
     if message.content.lower()=="hello":
         if message.author.id ==220617008436346880:
             await message.channel.send("Bonjour Père")
@@ -56,9 +57,10 @@ class PyBotCommand(commands.Cog):
     
     @commands.command(name='joke')
     async def joke(self, ctx):
-        #r = requests.get('')
-        await ctx.send("en maintenance")
-        #await ctx.send(file=File('my_file.png'))
+        r = requests.get('https://www.cyanidevf.fr/image-aleatoire/')
+        image = re.findall('src=\"(https://www.cyanidevf.fr/wp-content/uploads/[0-9]*/[0-9]*/[a-z]*[-]?[0-9]?[.]png)',str(r.content))[0]
+        await ctx.send(image)
+
 
 pyBotSon.add_cog(PyBotCommand(pyBotSon))
 pyBotSon.run(os.getenv("TOKEN"))
